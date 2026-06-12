@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:private_diary/view/splash_screen.dart';
+import 'package:private_diary/view/home_screen.dart';
+import 'package:private_diary/view/lock_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: SplashScreen(),
+      home: LockScreen(child: const HomeScreen()),
     );
   }
 }
