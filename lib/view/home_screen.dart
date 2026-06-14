@@ -1,46 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:private_diary/models/diary_entry.dart';
+import 'package:provider/provider.dart';
+import 'package:private_diary/provider/diary_provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  double _progress = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() => _progress = 1.0);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final diaryProvider = context.watch<DiaryProvider>();
+    final entries = diaryProvider.entries;
+
     return Scaffold(
-      body: Center(
-        child: ClipRect(
-          clipper: _TextRevealClipper(_progress),
-          child: const Text(
-            'Welcome to your Diary',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-          ),
-        ),
+      appBar: AppBar(title: const Text('My Diary')),
+      body: entries.isEmpty
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: entries.length,
+              itemBuilder: (context, index) => _buildEntryCard(entries[index]),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
-}
 
-class _TextRevealClipper extends CustomClipper<Rect> {
-  final double progress;
-  _TextRevealClipper(this.progress);
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.book_outlined, size: 80, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          Text(
+            'Your diary is empty.\nTap + to write your first entry.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey[600], fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
 
-  @override
-  Rect getClip(Size size) => Rect.fromLTRB(0, 0, size.width * progress, size.height);
+  Widget _buildEntryCard(DiaryEntry entry) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        title: Text(entry.title),
+        subtitle: Text(
+          entry.body.length > 60 ? '${entry.body.substring(0, 60)}...' : entry.body,
+        ),
+        trailing: Text(_formatDate(entry.date)),
+        onTap: () {
+          // Navigate to view/edit entry (later)
+        },
+      ),
+    );
+  }
 
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) => true;
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    if (date.year == now.year && date.month == now.month && date.day == now.day) {
+      return 'Today';
+    }
+    final yesterday = now.subtract(const Duration(days: 1));
+    if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) {
+      return 'Yesterday';
+    }
+    return '${date.day}/${date.month}/${date.year}';
+  }
 }

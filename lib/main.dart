@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:private_diary/models/diary_entry.dart';
+import 'package:private_diary/provider/diary_provider.dart';
 import 'package:private_diary/view/home_screen.dart';
 import 'package:private_diary/view/lock_screen.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 void main() async{
   await Hive.initFlutter();
   Hive.registerAdapter(DiaryEntryAdapter());
   await Hive.openBox<DiaryEntry>('diary_entries');
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (_) => DiaryProvider(),
+    child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
