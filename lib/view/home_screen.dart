@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:private_diary/models/diary_entry.dart';
+import 'package:private_diary/view/write_entry_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:private_diary/provider/diary_provider.dart';
 
@@ -18,13 +19,17 @@ class HomeScreen extends StatelessWidget {
           : ListView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: entries.length,
-              itemBuilder: (context, index) => _buildEntryCard(entries[index]),
+              itemBuilder: (context, index) => _buildEntryCard(entries[index], context),
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
-        child: const Icon(Icons.add),
-      ),
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const WriteEntryScreen()),
+    );
+  },
+  child: const Icon(Icons.add),
+),
     );
   }
 
@@ -45,7 +50,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEntryCard(DiaryEntry entry) {
+  Widget _buildEntryCard(DiaryEntry entry, BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
@@ -55,8 +60,11 @@ class HomeScreen extends StatelessWidget {
         ),
         trailing: Text(_formatDate(entry.date)),
         onTap: () {
-          // Navigate to view/edit entry (later)
-        },
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => WriteEntryScreen(existingEntry: entry)),
+  );
+},
       ),
     );
   }

@@ -25,4 +25,8 @@ class DiaryProvider extends ChangeNotifier {
     await _repo.deleteEntry(entry);
     _loadEntries();
   }
+    Future<void> updateEntry(DiaryEntry entry) async {
+    await _repo.updateEntry(entry);
+    _loadEntries();
+  }
 }
