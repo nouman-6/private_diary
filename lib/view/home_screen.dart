@@ -51,20 +51,38 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildEntryCard(DiaryEntry entry, BuildContext context) {
-    return Card(
+    return Dismissible(
+      key: Key(entry.key.toString()),
+    direction: DismissDirection.endToStart, // swipe left to delete
+    background: Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.only(right: 20),
       margin: const EdgeInsets.only(bottom: 10),
-      child: ListTile(
-        title: Text(entry.title),
-        subtitle: Text(
-          entry.body.length > 60 ? '${entry.body.substring(0, 60)}...' : entry.body,
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(Icons.delete, color: Colors.white),
+    ),
+    confirmDismiss: (direction) => _confirmDelete(context),
+    onDismissed: (direction) {
+      context.read<DiaryProvider>().deleteEntry(entry);
+    },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 10),
+        child: ListTile(
+          title: Text(entry.title),
+          subtitle: Text(
+            entry.body.length > 60 ? '${entry.body.substring(0, 60)}...' : entry.body,
+          ),
+          trailing: Text(_formatDate(entry.date)),
+          onTap: () {
+        Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => WriteEntryScreen(existingEntry: entry)),
+        );
+      },
         ),
-        trailing: Text(_formatDate(entry.date)),
-        onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (_) => WriteEntryScreen(existingEntry: entry)),
-  );
-},
       ),
     );
   }
@@ -80,4 +98,26 @@ class HomeScreen extends StatelessWidget {
     }
     return '${date.day}/${date.month}/${date.year}';
   }
+
+  Future<bool> _confirmDelete(BuildContext context) async {
+  return await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Delete Entry'),
+          content: const Text('Are you sure you want to delete this entry? This cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Delete'),
+            ),
+          ],
+        ),
+      ) ??
+      false; // if dialog dismissed without choice, return false
+}
 }
