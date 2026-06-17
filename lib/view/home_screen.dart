@@ -19,17 +19,18 @@ class HomeScreen extends StatelessWidget {
           : ListView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: entries.length,
-              itemBuilder: (context, index) => _buildEntryCard(entries[index], context),
+              itemBuilder: (context, index) =>
+                  _buildEntryCard(entries[index], context),
             ),
       floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const WriteEntryScreen()),
-    );
-  },
-  child: const Icon(Icons.add),
-),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const WriteEntryScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
@@ -53,35 +54,62 @@ class HomeScreen extends StatelessWidget {
   Widget _buildEntryCard(DiaryEntry entry, BuildContext context) {
     return Dismissible(
       key: Key(entry.key.toString()),
-    direction: DismissDirection.endToStart, // swipe left to delete
-    background: Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 20),
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.circular(12),
+      direction: DismissDirection.endToStart, // swipe left to delete
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(Icons.delete, color: Colors.white),
       ),
-      child: const Icon(Icons.delete, color: Colors.white),
-    ),
-    confirmDismiss: (direction) => _confirmDelete(context),
-    onDismissed: (direction) {
-      context.read<DiaryProvider>().deleteEntry(entry);
-    },
+      confirmDismiss: (direction) => _confirmDelete(context),
+      onDismissed: (direction) {
+        final provider = context.read<DiaryProvider>();
+        final deletedEntry = entry;
+
+        provider.deleteEntry(entry);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Entry deleted'),
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                provider.addEntry(
+                  DiaryEntry(
+                    title: deletedEntry.title,
+                    body: deletedEntry.body,
+                    date: deletedEntry.date,
+                    mood: deletedEntry.mood,
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
       child: Card(
         margin: const EdgeInsets.only(bottom: 10),
         child: ListTile(
           title: Text(entry.title),
           subtitle: Text(
-            entry.body.length > 60 ? '${entry.body.substring(0, 60)}...' : entry.body,
+            entry.body.length > 60
+                ? '${entry.body.substring(0, 60)}...'
+                : entry.body,
           ),
           trailing: Text(_formatDate(entry.date)),
           onTap: () {
-        Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => WriteEntryScreen(existingEntry: entry)),
-        );
-      },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => WriteEntryScreen(existingEntry: entry),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -89,35 +117,41 @@ class HomeScreen extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
-    if (date.year == now.year && date.month == now.month && date.day == now.day) {
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
       return 'Today';
     }
     final yesterday = now.subtract(const Duration(days: 1));
-    if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) {
+    if (date.year == yesterday.year &&
+        date.month == yesterday.month &&
+        date.day == yesterday.day) {
       return 'Yesterday';
     }
     return '${date.day}/${date.month}/${date.year}';
   }
 
   Future<bool> _confirmDelete(BuildContext context) async {
-  return await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Delete Entry'),
-          content: const Text('Are you sure you want to delete this entry? This cannot be undone.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Entry'),
+            content: const Text(
+              'Are you sure you want to delete this entry? This cannot be undone.',
             ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text('Delete'),
-            ),
-          ],
-        ),
-      ) ??
-      false; // if dialog dismissed without choice, return false
-}
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // if dialog dismissed without choice, return false
+  }
 }

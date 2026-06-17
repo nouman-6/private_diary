@@ -36,7 +36,6 @@ class _LockScreenState extends State<LockScreen> {
     } on LocalAuthException catch (e) {
       if (!mounted) return;
       setState(() => _isAuthenticating = false);
-      // e.code can be checked: userCanceled, notEnrolled, lockedOut, etc.
       debugPrint('Auth error: ${e.code} - ${e.description}');
     }
   }
