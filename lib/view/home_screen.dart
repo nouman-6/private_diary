@@ -4,8 +4,22 @@ import 'package:private_diary/view/write_entry_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:private_diary/provider/diary_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +27,35 @@ class HomeScreen extends StatelessWidget {
     final entries = diaryProvider.entries;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Diary')),
+      appBar: AppBar(
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Search entries...',
+                  border: InputBorder.none,
+                ),
+                onChanged: (value) {
+                  context.read<DiaryProvider>().search(value);
+                },
+              )
+            : const Text('My Diary'),
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() => _isSearching = !_isSearching);
+              if (!_isSearching) {
+                _searchController.clear();
+                context.read<DiaryProvider>().clearSearch();
+              }
+            },
+          ),
+        ],
+      ),
       body: entries.isEmpty
-          ? _buildEmptyState()
+          ? _buildEmptyState(_isSearching)
           : ListView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: entries.length,
@@ -34,15 +74,21 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(bool isSearching) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.book_outlined, size: 80, color: Colors.grey[400]),
+          Icon(
+            isSearching ? Icons.search_off : Icons.book_outlined,
+            size: 80,
+            color: Colors.grey[400],
+          ),
           const SizedBox(height: 16),
           Text(
-            'Your diary is empty.\nTap + to write your first entry.',
+            isSearching
+                ? 'No entries found for your search.'
+                : 'Your diary is empty.\nTap + to write your first entry.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey[600], fontSize: 16),
           ),

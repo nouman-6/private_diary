@@ -4,16 +4,10 @@ import 'package:private_diary/models/diary_entry.dart';
 
 class DiaryProvider extends ChangeNotifier {
   final _repo = DiaryRepository();
-
-  List<DiaryEntry> entries = [];
+  String _searchQuery = '';
 
   DiaryProvider() {
     _loadEntries();
-  }
-
-  void _loadEntries() {
-    entries = _repo.getAllEntries();
-    notifyListeners();
   }
 
   Future<void> addEntry(DiaryEntry entry) async {
@@ -25,8 +19,31 @@ class DiaryProvider extends ChangeNotifier {
     await _repo.deleteEntry(entry);
     _loadEntries();
   }
-    Future<void> updateEntry(DiaryEntry entry) async {
+
+  Future<void> updateEntry(DiaryEntry entry) async {
     await _repo.updateEntry(entry);
     _loadEntries();
+  }
+
+  List<DiaryEntry> get entries {
+    if (_searchQuery.isEmpty) return _allEntries;
+    return _repo.searchEntries(_searchQuery);
+  }
+
+  List<DiaryEntry> _allEntries = [];
+
+  void _loadEntries() {
+    _allEntries = _repo.getAllEntries();
+    notifyListeners();
+  }
+
+  void search(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _searchQuery = '';
+    notifyListeners();
   }
 }

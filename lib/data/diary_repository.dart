@@ -19,4 +19,13 @@ class DiaryRepository {
   Future<void> deleteEntry(DiaryEntry entry) async {
     await entry.delete();
   }
+
+  List<DiaryEntry> searchEntries(String query) {
+  return _box.values.where((entry) {
+    final q = query.toLowerCase();
+    return entry.title.toLowerCase().contains(q) ||
+        entry.body.toLowerCase().contains(q);
+  }).toList()
+    ..sort((a, b) => b.date.compareTo(a.date));
+}
 }
