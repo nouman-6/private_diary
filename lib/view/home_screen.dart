@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:private_diary/models/diary_entry.dart';
+import 'package:private_diary/view/stats_screen.dart';
 import 'package:private_diary/view/write_entry_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:private_diary/provider/diary_provider.dart';
@@ -50,6 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 _searchController.clear();
                 context.read<DiaryProvider>().clearSearch();
               }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const StatsScreen()),
+              );
             },
           ),
         ],

@@ -46,4 +46,38 @@ class DiaryProvider extends ChangeNotifier {
     _searchQuery = '';
     notifyListeners();
   }
+
+  Map<String, int> getMoodCounts() {
+    final counts = <String, int>{};
+    for (final entry in _allEntries) {
+      counts[entry.mood] = (counts[entry.mood] ?? 0) + 1;
+    }
+    return counts;
+  }
+
+  int getCurrentStreak() {
+    if (_allEntries.isEmpty) return 0;
+
+    final dates =
+        _allEntries
+            .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
+            .toSet()
+            .toList()
+          ..sort((a, b) => b.compareTo(a));
+
+    int streak = 0;
+    DateTime checkDate = DateTime.now();
+    checkDate = DateTime(checkDate.year, checkDate.month, checkDate.day);
+
+    for (final date in dates) {
+      if (date == checkDate ||
+          date == checkDate.subtract(const Duration(days: 1))) {
+        streak++;
+        checkDate = date;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
 }
