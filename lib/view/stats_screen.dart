@@ -67,7 +67,7 @@ class StatsScreen extends StatelessWidget {
 
   Widget _buildStreakCard(int streak) {
     return Card(
-      color: Colors.deepPurple.shade50,
+      // color: Colors.deepPurple.shade50,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(

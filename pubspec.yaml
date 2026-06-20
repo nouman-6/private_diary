@@ -39,6 +39,7 @@ dependencies:
   hive_ce_flutter: ^2.3.4
   provider: ^6.1.5+1
   fl_chart: ^1.2.0
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:

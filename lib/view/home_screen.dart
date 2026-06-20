@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:private_diary/models/diary_entry.dart';
+import 'package:private_diary/provider/theme_provider.dart';
 import 'package:private_diary/view/stats_screen.dart';
 import 'package:private_diary/view/write_entry_screen.dart';
 import 'package:provider/provider.dart';
@@ -60,6 +61,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(builder: (_) => const StatsScreen()),
               );
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              context.watch<ThemeProvider>().isDarkMode
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            onPressed: () {
+              context.read<ThemeProvider>().toggleTheme();
             },
           ),
         ],
