@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:private_diary/view/pin_screen.dart';
 
 class LockScreen extends StatefulWidget {
   final Widget child;
@@ -60,6 +61,22 @@ class _LockScreenState extends State<LockScreen> {
                 onPressed: _authenticate,
                 child: const Text('Unlock'),
               ),
+
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () async {
+                final result = await Navigator.push<bool>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PinScreen(isSettingPin: false),
+                  ),
+                );
+                if (result == true) {
+                  setState(() => _unlocked = true);
+                }
+              },
+              child: const Text('Use PIN instead'),
+            ),
           ],
         ),
       ),
