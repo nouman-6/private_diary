@@ -7,11 +7,17 @@ import 'package:private_diary/view/home_screen.dart';
 import 'package:private_diary/view/lock_screen.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() async{
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await Hive.initFlutter();
   Hive.registerAdapter(DiaryEntryAdapter());
   await Hive.openBox<DiaryEntry>('diary_entries');
+
+  FlutterNativeSplash.remove();
   runApp(
     MultiProvider(
       providers: [

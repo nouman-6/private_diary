@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:private_diary/view/pin_screen.dart';
@@ -50,7 +51,9 @@ class _LockScreenState extends State<LockScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.lock_outline, size: 64),
+            const BounceInDown(
+  child:  Icon(Icons.lock_outline, size: 64),
+),
             const SizedBox(height: 16),
             const Text('App locked'),
             const SizedBox(height: 24),
