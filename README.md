@@ -48,7 +48,7 @@ A biometric-locked personal diary app built with Flutter. Your thoughts, complet
 
 1. Clone the repo
 ```bash
-   git clone https://github.com/yourusername/private_diary.git
+   git clone https://github.com/nouman-6/private_diary.git
    cd private_diary
 ```
 
@@ -67,3 +67,43 @@ A biometric-locked personal diary app built with Flutter. Your thoughts, complet
 ---
 
 ## 📁 Project Structure
+
+lib/
+
+├── data/          # Repositories (Hive, PIN)
+
+├── model/         # DiaryEntry Hive model
+
+├── provider/      # DiaryProvider, ThemeProvider
+
+├── theme/         # Light & dark theme definitions
+
+└── view/          # All screens
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how:
+
+1. Fork the repo
+2. Create a branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+Please open an issue first for major changes.
+
+---
+
+## 📄 License
+
+MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+## 👨‍💻 Author
+
+Built by [Your Name](https://github.com/yourusername) as a build-in-public project.
+
+Follow the journey on [LinkedIn](#) • [X/Twitter](#)
