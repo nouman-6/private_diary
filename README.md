@@ -40,6 +40,7 @@ A biometric-locked personal diary app built with Flutter. Your thoughts, complet
 - local_auth (biometric authentication)
 - flutter_secure_storage (PIN storage)
 - fl_chart (mood chart)
+- shared_preferences (theme change)
 
 ---
 
