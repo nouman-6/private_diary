@@ -106,4 +106,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 Built by [Your Name](https://github.com/yourusername) as a build-in-public project.
 
-Follow the journey on [LinkedIn](#) • [X/Twitter](#)
+Follow the journey on [LinkedIn](https://www.linkedin.com/in/nouman-iqbal-a4b646262/) • [X/Twitter](#)
