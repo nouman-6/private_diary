@@ -4,6 +4,11 @@ A biometric-locked personal diary app built with Flutter. Your thoughts, complet
 
 > Built in public in 2 weeks as an open-source side project.
 
+<p align="center">
+  <img src="assets/screenshots/demo.gif" width="280"/>
+</p>
+
+
 ---
 
 ##  Screenshots
