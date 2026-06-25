@@ -9,7 +9,7 @@ A biometric-locked personal diary app built with Flutter. Your thoughts, complet
 ##  Screenshots
 
 | Lock | Finger Print | Pin | Home |
-|------|------|------|------|
+|------|-------|-------|----------|
 | ![Home](assets/screenshots/1.jpeg) | ![Write](assets/screenshots/2.jpeg) | ![Stats](assets/screenshots/3.jpeg) | ![Settings](assets/screenshots/4.jpeg) |
 
 | Write | Stats | Settings (Light) | Settings (Dark) |
